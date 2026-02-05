@@ -1,8 +1,6 @@
+import "./config/loadEnv.js";
+import { config } from "./config/index.js";
 import express from "express";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-
-passport.use(new LocalStrategy((username, password, done) => {}));
 
 const app = express();
 
