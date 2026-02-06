@@ -1,3 +1,4 @@
+import "./loadEnv.js";
 import { z } from "zod";
 
 const EnvSchema = z.object({
@@ -9,6 +10,8 @@ const EnvSchema = z.object({
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
   DB_NAME: z.string(),
+
+  SESSION_SECRET: z.string().min(32),
 });
 
 const env = EnvSchema.parse(process.env);
@@ -23,5 +26,9 @@ export const config = {
     user: env.DB_USER,
     password: env.DB_PASSWORD,
     name: env.DB_NAME,
+  },
+
+  session: {
+    secret: env.SESSION_SECRET,
   },
 };

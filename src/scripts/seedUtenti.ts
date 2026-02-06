@@ -1,19 +1,11 @@
 import "../config/loadEnv.js";
 import { pool } from "../db/index.js";
-
-import bcrypt from "bcrypt";
-
-const SALT_ROUNDS = 12;
-
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, SALT_ROUNDS);
-}
+import { hashPassword } from "../auth/password.js";
 
 async function seed() {
   console.log("🌱 Seeding database...");
 
   const adminPassword = await hashPassword("1234");
-  const presidentPassword = await hashPassword("presidente123");
 
   await pool.query(
     `INSERT INTO utenti (username, password_hash, ruolo)

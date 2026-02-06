@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% if (user) { %>
+      <% include ../partials/navbar %>
+    <% } %>
+
+    <main>
+      <%- body %>
+    </main>
+
+    <% include ../partials/footer %>
+  </body>
+</html>

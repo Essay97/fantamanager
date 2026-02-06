@@ -1,10 +1,5 @@
-import "./config/loadEnv.js";
-import express from "express";
+import app from "./app.js";
 
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("Server is running");
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });
-
-export default app;
