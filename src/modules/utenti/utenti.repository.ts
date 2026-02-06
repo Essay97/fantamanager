@@ -1,4 +1,4 @@
-import { pool } from "../../db.js";
+import { pool } from "../../db/index.js";
 
 export async function findByUsername(username: string) {
   const result = await pool.query(

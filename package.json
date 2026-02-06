@@ -8,7 +8,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js",
-    "migrate": "node-pg-migrate -j sql"
+    "migrate": "node-pg-migrate -j sql -m src/db/migrations"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
