@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
+import type { UtenteAuth } from "../modules/utenti/utenti.types.js";
 
 const router = Router();
 
@@ -9,12 +10,11 @@ const router = Router();
  * Mostra la pagina di login
  */
 router.get("/login", (req: Request, res: Response) => {
-  // se già loggato, vai alla dashboard
   if (req.isAuthenticated && req.isAuthenticated()) {
-    return res.redirect("/dashboard");
+    return res.redirect("/utenti/me");
   }
 
-  res.render("login", {
+  res.render("auth/login", {
     error: null,
   });
 });
@@ -26,19 +26,17 @@ router.get("/login", (req: Request, res: Response) => {
 router.post("/login", (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     "local",
-    (err: any, user: any, info?: { message?: string }) => {
+    (err: any, user: UtenteAuth | false, info?: { message?: string }) => {
       if (err) {
         return next(err);
       }
 
       if (!user) {
-        // login fallito → torni al login con messaggio
-        return res.status(401).render("login", {
+        return res.render("auth/login", {
           error: info?.message ?? "Credenziali non valide",
         });
       }
 
-      // login riuscito → creazione sessione
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
