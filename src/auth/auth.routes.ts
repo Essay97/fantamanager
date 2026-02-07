@@ -16,6 +16,8 @@ router.get("/login", (req: Request, res: Response) => {
 
   res.render("auth/login", {
     error: null,
+    title: "Fantamanager - Login",
+    user: req.user,
   });
 });
 
@@ -42,7 +44,19 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
           return next(err);
         }
 
-        return res.redirect("/dashboard");
+        // Ensure the session is saved before redirecting so the
+        // session cookie is set in the browser.
+        if (req.session) {
+          req.session.save((saveErr) => {
+            if (saveErr) {
+              return next(saveErr);
+            }
+
+            return res.redirect("/utenti/me");
+          });
+        } else {
+          return res.redirect("/utenti/me");
+        }
       });
     },
   )(req, res, next);

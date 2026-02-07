@@ -37,6 +37,9 @@ app.use(
   }),
 );
 
+// Debug: show whether cookies will be set as secure in this environment
+console.log(`Session cookie secure: ${config.env === "production"} (env=${config.env})`);
+
 app.get("/test", (req, res) => {
   res.send("TEST OK");
 });
@@ -46,7 +49,5 @@ app.use(passport.session());
 
 app.use(authRoutes);
 app.use("/utenti", utentiRoutes);
-
-console.log(">>> APP.TS CARICATO");
 
 export default app;
