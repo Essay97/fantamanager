@@ -5,6 +5,7 @@ import passport from "./auth/passport.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import expressLayouts from "express-ejs-layouts";
+import connectPgSimple from "connect-pg-simple";
 
 import authRoutes from "./auth/auth.routes.js";
 import utentiRoutes from "./modules/utenti/utenti.routes.js";
@@ -22,6 +23,8 @@ app.set("layout", "layout/base");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const store = new (connectPgSimple(session))();
+
 app.use(
   session({
     secret: config.session.secret,
@@ -34,15 +37,9 @@ app.use(
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
+    store: store,
   }),
 );
-
-// Debug: show whether cookies will be set as secure in this environment
-console.log(`Session cookie secure: ${config.env === "production"} (env=${config.env})`);
-
-app.get("/test", (req, res) => {
-  res.send("TEST OK");
-});
 
 app.use(passport.initialize());
 app.use(passport.session());
