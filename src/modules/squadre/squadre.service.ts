@@ -55,3 +55,9 @@ export async function getSquadraPerID(
 ): Promise<repo.SquadraConProprietari | null> {
   return await repo.findSquadraPerId(id);
 }
+
+export async function getSquadrePerUtente(
+  utenteId: number,
+): Promise<repo.SquadraConProprietari[]> {
+  return await repo.findSquadrePerUtente(utenteId);
+}

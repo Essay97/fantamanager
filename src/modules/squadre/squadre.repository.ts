@@ -77,3 +77,27 @@ export async function findSquadraPerId(
     proprietari,
   };
 }
+
+/**
+ * Trova tutte le squadre di cui l'utente è proprietario.
+ */
+export async function findSquadrePerUtente(
+  utenteId: number,
+): Promise<SquadraConProprietari[]> {
+  const res = await pool.query(
+    `SELECT s.id, s.nome, s.creato_il, array_remove(array_agg(p2.utente_id), NULL) AS proprietari
+     FROM squadre s
+     JOIN proprieta_squadre p ON p.squadra_id = s.id
+     LEFT JOIN proprieta_squadre p2 ON p2.squadra_id = s.id
+     WHERE p.utente_id = $1
+     GROUP BY s.id, s.nome, s.creato_il`,
+    [utenteId],
+  );
+
+  return res.rows.map((r: any) => ({
+    id: r.id,
+    nome: r.nome,
+    creato_il: r.creato_il,
+    proprietari: r.proprietari ?? [],
+  }));
+}

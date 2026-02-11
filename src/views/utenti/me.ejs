@@ -1,10 +1,16 @@
-<h1>Benvenuto</h1>
+<h1>Benvenuto, <strong><%= user.username %></strong></h1>
 
-<p>Sei loggato come <strong><%= user.username %></strong></p>
-
-<p>Ruolo: <strong><%= user.ruolo %></strong></p>
-
-<p>Questa pagina è un placeholder. 🚧</p>
+<p>
+	Squadra:
+	<% if (typeof squads !== 'undefined' && squads && squads.length > 0) { %>
+		<strong><%= squads[0].nome %></strong>
+		<% if (squads[0].coOwnerName) { %>
+			in comproprietà con <strong><%= squads[0].coOwnerName %></strong>
+		<% } %>
+	<% } else { %>
+		Nessuna squadra
+	<% } %>
+</p>
 
 <% if (typeof error !== 'undefined' && error) { %>
 	<p class="form-error"><%= error %></p>
