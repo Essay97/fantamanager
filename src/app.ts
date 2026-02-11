@@ -23,6 +23,10 @@ app.set("layout", "layout/base");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Serve static assets (css, js) from the project-level `public` folder
+// Create a `public` directory next to `src` (e.g. /public/js, /public/css)
+app.use(express.static(path.join(__dirname, "..", "public")));
+
 const store = new (connectPgSimple(session))();
 
 app.use(

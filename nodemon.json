@@ -5,6 +5,6 @@
     "ignore": [
         "src/**/*.spec.ts"
     ],
-    "ext": "ts,js,json",
+    "ext": "ts,js,json,ejs",
     "exec": "tsx ./src/server.ts"
 }

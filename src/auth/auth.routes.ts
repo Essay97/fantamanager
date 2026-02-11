@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import type { UtenteAuth } from "../modules/utenti/utenti.types.js";
+import * as utentiService from "../modules/utenti/utenti.service.js";
 
 const router = Router();
 
@@ -36,6 +37,8 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.render("auth/login", {
           error: info?.message ?? "Credenziali non valide",
+          title: "Fantamanager - Login",
+          user: req.user,
         });
       }
 
@@ -55,7 +58,11 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             return res.redirect("/utenti/me");
           });
         } else {
-          return res.redirect("/utenti/me");
+          return res.render("auth/login", {
+            error: info?.message ?? "Credenziali non valide",
+            title: "Fantamanager - Login",
+            user: req.user,
+          });
         }
       });
     },
@@ -77,5 +84,62 @@ router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
     });
   });
 });
+
+/**
+ * POST /cambio-password
+ * Cambio password self-service: verifica vecchia password,
+ * aggiorna la nuova (hashata) e forza logout redirect /login
+ */
+router.post(
+  "/cambio-password",
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      return res.redirect("/login");
+    }
+
+    const { oldPassword, newPassword } = req.body as {
+      oldPassword?: string;
+      newPassword?: string;
+    };
+
+    const user = req.user as UtenteAuth | undefined;
+    if (!user) {
+      return res.redirect("/login");
+    }
+
+    try {
+      await utentiService.cambiaPassword(
+        user.id,
+        oldPassword ?? "",
+        newPassword ?? "",
+      );
+
+      // On success force logout so user must re-login with new password
+      req.logout((err) => {
+        if (err) {
+          return next(err);
+        }
+
+        req.session?.destroy(() => {
+          res.redirect("/login");
+        });
+      });
+    } catch (err: any) {
+      if (err.message === "INVALID_PASSWORD") {
+        return res.render("utenti/me", {
+          error: "Password attuale non corretta",
+          user: req.user,
+          title: "Fantamanager - Profilo",
+        });
+      }
+
+      if (err.message === "USER_NOT_FOUND") {
+        return next(new Error("Utente non trovato"));
+      }
+
+      return next(err);
+    }
+  },
+);
 
 export default router;

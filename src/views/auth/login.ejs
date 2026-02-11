@@ -1,12 +1,23 @@
-<h1>Login</h1>
+<div class="auth-container">
+  <h1>Login</h1>
 
-<form method="POST" action="/login">
-  <input name="username" placeholder="Username" required />
-  <input name="password" type="password" placeholder="Password" required />
+  <form class="auth-form" method="POST" action="/login">
+    <label>
+      <span class="visually-hidden">Username</span>
+      <input class="input" name="username" placeholder="Username" required />
+    </label>
 
-  <% if (error) { %>
-    <p style="color:red"><%= error %></p>
-  <% } %>
+    <label>
+      <span class="visually-hidden">Password</span>
+      <input class="input" name="password" type="password" placeholder="Password" required />
+    </label>
 
-  <button>Accedi</button>
-</form>
+    <% if (error) { %>
+      <p class="form-error"><%= error %></p>
+    <% } %>
+
+    <div class="form-actions">
+      <button class="btn primary">Accedi</button>
+    </div>
+  </form>
+</div>

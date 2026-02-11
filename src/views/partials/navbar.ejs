@@ -1,9 +1,13 @@
-<nav>
-  <span>Fantamanager</span>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="brand">Fantamanager</div>
 
-  <span> Ciao <strong><%= user.username %></strong> </span>
+    <div class="nav-right">
+      <div class="user">Ciao <strong><%= user.username %></strong></div>
 
-  <form method="POST" action="/logout">
-    <button>Logout</button>
-  </form>
+      <form method="POST" action="/logout" class="logout-form">
+        <button class="btn">Logout</button>
+      </form>
+    </div>
+  </div>
 </nav>
