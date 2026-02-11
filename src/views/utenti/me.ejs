@@ -12,6 +12,57 @@
 	<% } %>
 </p>
 
+<% if (typeof players !== 'undefined' && players && players.length > 0) { %>
+	<h2>Giocatori</h2>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Giocatore</th>
+				<th>Contratto</th>
+				<th>Tesseramento</th>
+				<th>Stipendio</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% players.forEach(function(p) { %>
+				<tr>
+					<td><%= p.nome %></td>
+					<td>
+						<% if (p.contratto && p.contratto.date) { %>
+							<%= p.contratto.date %>
+							<% if (p.contratto.otherTeamName) { %>
+								(<%= p.contratto.otherTeamName %>)
+							<% } %>
+						<% } else { %>
+							-
+						<% } %>
+					</td>
+					<td>
+						<% if (p.tesseramento && p.tesseramento.date) { %>
+							<%= p.tesseramento.date %>
+							<% if (p.tesseramento.otherTeamName) { %>
+								(<%= p.tesseramento.otherTeamName %>)
+							<% } %>
+						<% } else { %>
+							-
+						<% } %>
+					</td>
+					<td>
+						<% if (p.thisAmount !== null) { %>
+							€<%= p.thisAmount.toFixed(2) %>
+							<% if (p.othersAmount && p.othersAmount > 0) { %>
+								(€<%= p.othersAmount.toFixed(2) %>)
+							<% } %>
+						<% } else { %>
+							-
+						<% } %>
+					</td>
+				</tr>
+			<% }); %>
+		</tbody>
+	</table>
+<% } %>
+
 <% if (typeof error !== 'undefined' && error) { %>
 	<p class="form-error"><%= error %></p>
 <% } %>

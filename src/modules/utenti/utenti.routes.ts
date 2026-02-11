@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { requireLogin } from "../../auth/middleware.js";
 import * as squadreService from "../squadre/squadre.service.js";
 import * as utentiRepo from "./utenti.repository.js";
+import * as giocatoriService from "../giocatori/giocatori.service.js";
 import type { UtenteAuth } from "./utenti.types.js";
 
 const router = Router();
@@ -28,10 +29,19 @@ router.get("/me", requireLogin, async (req: Request, res: Response) => {
       }),
     );
 
+    // If user has at least one squad, fetch players for the first squad
+    let players = [] as any[];
+    if (squadsWithCoOwners.length > 0) {
+      const firstSquad = squadsWithCoOwners[0]!;
+      const firstSquadId = firstSquad.id;
+      players = await giocatoriService.getGiocatoriPerSquadra(firstSquadId);
+    }
+
     res.render("utenti/me", {
       title: "Il mio profilo",
       user,
       squads: squadsWithCoOwners,
+      players,
     });
   } catch (err: any) {
     res.render("utenti/me", {
