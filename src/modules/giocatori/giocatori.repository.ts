@@ -10,8 +10,6 @@ export interface ContrattoRow {
   id: number;
   giocatore_id: number;
   squadra_id: number;
-  data_inizio: string;
-  data_scadenza: string;
 }
 
 export interface TesseramentoRow {
@@ -50,10 +48,10 @@ export async function getContrattiForGiocatore(
   giocatoreId: number,
 ): Promise<ContrattoRow[]> {
   const res = await pool.query(
-    `SELECT id, giocatore_id, squadra_id, data_inizio::text, data_scadenza::text
+    `SELECT id, giocatore_id, squadra_id
      FROM contratti
      WHERE giocatore_id = $1
-     ORDER BY data_scadenza DESC`,
+     ORDER BY id DESC`,
     [giocatoreId],
   );
 

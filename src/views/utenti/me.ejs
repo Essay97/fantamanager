@@ -28,8 +28,8 @@
 				<tr>
 					<td><%= p.nome %></td>
 					<td>
-						<% if (p.contratto && p.contratto.date) { %>
-							<%= p.contratto.date %>
+						<% if (p.contratto && p.contratto.squadra_id) { %>
+							Attivo
 							<% if (p.contratto.otherTeamName) { %>
 								(<%= p.contratto.otherTeamName %>)
 							<% } %>

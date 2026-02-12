@@ -35,18 +35,16 @@ export async function getGiocatoriPerSquadra(
         (c) => c.squadra_id === squadraId,
       );
       let contrattoDisplay: {
-        date: string | null;
+        squadra_id: number | null;
         otherTeamName?: string | null;
-      } = { date: null };
+      } = { squadra_id: null };
 
       if (contrattoWithThis) {
-        contrattoDisplay.date = formatDateDDMMYYYY(
-          contrattoWithThis.data_scadenza,
-        );
+        contrattoDisplay.squadra_id = contrattoWithThis.squadra_id;
       } else if (contratti.length > 0) {
         const owner = contratti[0]!;
         const squadra = await squadreRepo.findSquadraPerId(owner.squadra_id);
-        contrattoDisplay.date = formatDateDDMMYYYY(owner.data_scadenza);
+        contrattoDisplay.squadra_id = owner.squadra_id;
         contrattoDisplay.otherTeamName = squadra ? squadra.nome : null;
       }
 
