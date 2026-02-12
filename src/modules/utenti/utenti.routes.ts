@@ -13,6 +13,7 @@ const router = Router();
  * Placeholder post-login
  */
 router.get("/me", requireLogin, async (req: Request, res: Response) => {
+  console.log("GET /utenti/me - fetching user profile...");
   const user = req.user as UtenteAuth;
 
   try {

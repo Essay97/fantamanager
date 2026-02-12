@@ -11,6 +11,41 @@
     <main class="container">
       <%- body %>
     </main>
+
+    <% if (user) { %>
+      <!-- Change password modal -->
+      <div id="change-password-modal" class="modal hidden">
+        <div class="modal-content">
+          <h2>Cambia password</h2>
+          <form id="change-password-form" class="auth-form" method="POST" action="/cambio-password">
+            <label>
+              <span class="label">Password attuale</span>
+              <input id="oldPassword" name="oldPassword" type="password" required />
+            </label>
+
+            <label>
+              <span class="label">Nuova password</span>
+              <input id="newPassword" name="newPassword" type="password" required />
+            </label>
+
+            <label>
+              <span class="label">Conferma nuova password</span>
+              <input id="confirmNewPassword" name="confirmNewPassword" type="password" required />
+            </label>
+
+            <p id="cp-error" class="form-error" style="display:none;"></p>
+
+            <div class="form-actions">
+              <button class="btn primary" type="submit">Cambia</button>
+              <button id="cp-cancel" class="btn" type="button">Annulla</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Client script for modal and dropdown -->
+      <script src="/js/cambiaPassword.js"></script>
+    <% } %>
     
     <%- include("../partials/footer") %>
   </body>

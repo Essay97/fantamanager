@@ -73,6 +73,10 @@ p {
 }
 .logout-form {
   margin: 0;
+  width: 100%;
+}
+.logout-form .dropdown-item {
+  width: 100%;
 }
 
 /* Buttons */
@@ -87,6 +91,50 @@ p {
   background: #2563eb;
   color: #fff;
   border-color: #1e40af;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-toggle {
+  cursor: pointer;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  min-width: 150px;
+  display: none;
+  z-index: 100;
+  overflow: hidden;
+}
+.dropdown.open .dropdown-menu {
+  display: block;
+}
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  border-bottom: 1px solid #f3f4f6;
+}
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+.dropdown-item:hover {
+  background: #f3f4f6;
 }
 
 /* Auth forms */
@@ -156,6 +204,30 @@ p {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   margin: auto; /* Aggiungi questo come fallback */
 }
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.table thead {
+  background: #f3f4f6;
+  border-bottom: 2px solid #d1d5db;
+}
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+.table th {
+  font-weight: 600;
+  font-size: 14px;
+}
+.table tbody tr:hover {
+  background: #f9fafb;
+}
+
 /* Footer */
 footer {
   margin-top: 40px;

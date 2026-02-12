@@ -1,6 +1,12 @@
 import * as repo from "./giocatori.repository.js";
 import * as squadreRepo from "../squadre/squadre.repository.js";
 
+function formatDateDDMMYYYY(dateStr: string | null): string | null {
+  if (!dateStr) return null;
+  const [year, month, day] = dateStr.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 function computeRate(base: number): number {
   if (base >= 1 && base <= 50) return 0.1;
   if (base >= 51 && base <= 100) return 0.2;
@@ -11,6 +17,7 @@ function computeRate(base: number): number {
 export async function getGiocatoriPerSquadra(
   squadraId: number,
 ): Promise<any[]> {
+  console.log(`Fetching players for team id=${squadraId}...`);
   const giocatori = await repo.listGiocatoriLinkedToSquadra(squadraId);
 
   const result = await Promise.all(
@@ -18,6 +25,10 @@ export async function getGiocatoriPerSquadra(
       const contratti = await repo.getContrattiForGiocatore(g.id);
       const tesseramenti = await repo.getTesseramentiForGiocatore(g.id);
       const quotes = await repo.getQuoteForGiocatore(g.id);
+
+      if (g.id === 173) {
+        console.log("Giocatore 173:", g, contratti, tesseramenti, quotes);
+      }
 
       // Contratto display
       const contrattoWithThis = contratti.find(
@@ -29,11 +40,13 @@ export async function getGiocatoriPerSquadra(
       } = { date: null };
 
       if (contrattoWithThis) {
-        contrattoDisplay.date = contrattoWithThis.data_scadenza;
+        contrattoDisplay.date = formatDateDDMMYYYY(
+          contrattoWithThis.data_scadenza,
+        );
       } else if (contratti.length > 0) {
-        const owner = contratti[0];
+        const owner = contratti[0]!;
         const squadra = await squadreRepo.findSquadraPerId(owner.squadra_id);
-        contrattoDisplay.date = owner.data_scadenza;
+        contrattoDisplay.date = formatDateDDMMYYYY(owner.data_scadenza);
         contrattoDisplay.otherTeamName = squadra ? squadra.nome : null;
       }
 
@@ -45,11 +58,13 @@ export async function getGiocatoriPerSquadra(
       } = { date: null };
 
       if (tessWithThis) {
-        tesseramentoDisplay.date = tessWithThis.data_scadenza;
+        tesseramentoDisplay.date = formatDateDDMMYYYY(
+          tessWithThis.data_scadenza,
+        );
       } else if (tesseramenti.length > 0) {
-        const owner = tesseramenti[0];
+        const owner = tesseramenti[0]!;
         const squadra = await squadreRepo.findSquadraPerId(owner.squadra_id);
-        tesseramentoDisplay.date = owner.data_scadenza;
+        tesseramentoDisplay.date = formatDateDDMMYYYY(owner.data_scadenza);
         tesseramentoDisplay.otherTeamName = squadra ? squadra.nome : null;
       }
 
@@ -58,22 +73,30 @@ export async function getGiocatoriPerSquadra(
       const baseSalary = Number(g.base_stipendio) * rate;
 
       let thisSquadPercent = 0;
-      let otherPercent = 0;
 
       for (const q of quotes) {
         if (q.squadra_id === squadraId)
           thisSquadPercent += Number(q.percentuale || 0);
-        else otherPercent += Number(q.percentuale || 0);
       }
 
-      let thisAmount = null;
-      let othersAmount = null;
+      let thisAmount: number | null = null;
+      let otherSquads: { amount: number; teamName: string }[] = [];
 
       if (quotes.length === 0) {
         thisAmount = baseSalary;
       } else {
         thisAmount = (baseSalary * thisSquadPercent) / 100;
-        othersAmount = (baseSalary * otherPercent) / 100;
+
+        // Get other squads' contributions
+        const otherQuotes = quotes.filter((q) => q.squadra_id !== squadraId);
+        for (const q of otherQuotes) {
+          const amount = (baseSalary * Number(q.percentuale)) / 100;
+          const otherSquadra = await squadreRepo.findSquadraPerId(q.squadra_id);
+          otherSquads.push({
+            amount: Number(amount.toFixed(2)),
+            teamName: otherSquadra ? otherSquadra.nome : "Sconosciuto",
+          });
+        }
       }
 
       return {
@@ -84,8 +107,7 @@ export async function getGiocatoriPerSquadra(
         base_stipendio: Number(g.base_stipendio),
         baseSalary: Number(baseSalary.toFixed(2)),
         thisAmount: thisAmount !== null ? Number(thisAmount.toFixed(2)) : null,
-        othersAmount:
-          othersAmount !== null ? Number(othersAmount.toFixed(2)) : null,
+        otherSquads,
       };
     }),
   );

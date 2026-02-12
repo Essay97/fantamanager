@@ -1,4 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Dropdown toggle
+  const dropdownToggle = document.querySelector(".dropdown-toggle");
+  const dropdown = document.querySelector(".dropdown");
+
+  if (dropdownToggle && dropdown) {
+    dropdownToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove("open");
+      }
+    });
+
+    // Close dropdown when a menu item is clicked
+    const dropdownItems = dropdown.querySelectorAll(".dropdown-item");
+    dropdownItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        dropdown.classList.remove("open");
+      });
+    });
+  }
+
+  // Change password modal
   const openBtn = document.getElementById("open-change-password");
   const modal = document.getElementById("change-password-modal");
   const cancelBtn = document.getElementById("cp-cancel");

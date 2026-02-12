@@ -5,9 +5,17 @@
     <div class="nav-right">
       <div class="user">Ciao <strong><%= user.username %></strong></div>
 
-      <form method="POST" action="/logout" class="logout-form">
-        <button class="btn">Logout</button>
-      </form>
+      <div class="dropdown">
+        <button class="btn dropdown-toggle">Menu</button>
+        <div class="dropdown-menu">
+          <button id="open-change-password" class="dropdown-item" type="button">
+            Cambia password
+          </button>
+          <form method="POST" action="/logout" class="logout-form">
+            <button class="dropdown-item">Logout</button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
